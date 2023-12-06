@@ -1,10 +1,10 @@
 struct Race {
-    time: u32,
-    distance: u32,
+    time: u64,
+    distance: u64,
 }
 
 impl Race {
-    fn hold_button(&self, duration: u32) -> u32 {
+    fn hold_button(&self, duration: u64) -> u64 {
         if duration >= self.time {
             return 0
         }
@@ -12,7 +12,7 @@ impl Race {
         duration * (self.time - duration)
     }
 
-    fn possible_wins(&self) -> Vec<u32> {
+    fn possible_wins(&self) -> Vec<u64> {
         let mut wins = vec![];
         
         for i in 1..self.time {
@@ -27,24 +27,24 @@ impl Race {
     }
 }
 
-#[aoc_generator(day6)]
-fn generator(input: &str) -> Vec<Race> {
+#[aoc_generator(day6, part1)]
+fn generator_part1(input: &str) -> Vec<Race> {
     let mut races = vec![];
 
     let mut input_iter = input.lines();
 
-    let times: Vec<u32> = input_iter.next().unwrap().split(":").collect::<Vec<&str>>()[1]
+    let times: Vec<u64> = input_iter.next().unwrap().split(":").collect::<Vec<&str>>()[1]
         .split(" ")
         .collect::<Vec<&str>>()
         .iter()
-        .filter_map(|s| s.parse::<u32>().ok())
+        .filter_map(|s| s.parse::<u64>().ok())
         .collect();
 
-    let distances: Vec<u32> = input_iter.next().unwrap().split(":").collect::<Vec<&str>>()[1]
+    let distances: Vec<u64> = input_iter.next().unwrap().split(":").collect::<Vec<&str>>()[1]
         .split(" ")
         .collect::<Vec<&str>>()
         .iter()
-        .filter_map(|s| s.parse::<u32>().ok())
+        .filter_map(|s| s.parse::<u64>().ok())
         .collect();
 
     for i in 0..times.len() {
@@ -55,6 +55,18 @@ fn generator(input: &str) -> Vec<Race> {
     }
 
     races
+}
+
+#[aoc_generator(day6, part2)]
+fn generator_part2(input: &str) -> Race {
+    let input = input.replace(" ", "");
+
+    let mut input_iter = input.lines();
+
+    let time = input_iter.next().unwrap().split(":").collect::<Vec<&str>>()[1].parse().unwrap();
+    let distance = input_iter.next().unwrap().split(":").collect::<Vec<&str>>()[1].parse().unwrap();
+
+    Race { time, distance }
 }
 
 #[aoc(day6, part1)]
@@ -70,6 +82,7 @@ fn solve_part1(input: &[Race]) -> usize {
     result
 }
 
-// #[aoc(day6, part2)]
-// fn solve_part2(input: &Almanac) -> u32 {
-// }
+#[aoc(day6, part2)]
+fn solve_part2(input: &Race) -> usize {
+    input.possible_wins().len()
+}
